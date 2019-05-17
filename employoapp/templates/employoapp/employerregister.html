@@ -1,0 +1,88 @@
+{% extends 'employoapp/base.html'%}
+{% block content %}
+{% if error %}
+<script>
+    alert("User with this email already exists Please Login with ypur credentials");
+</script>
+
+{% endif %}
+{% if uerror %}
+<script>
+    alert("Username already exists");
+</script>
+
+{% endif %}
+<div class="container" style="padding-top:30px;">
+    <h4 style="text-align:center"> Tell Us more about Yourself</h4>
+<div class="row" style="padding-top:30px;">
+      <form action="{% url 'add-employer' %}" method="POST">
+          {% csrf_token %}
+          <div class="row">
+              <div class="input-field col s6">
+                <input id="first_name" type="text" class="validate" name="firstname" autocomplete="off">
+                <label for="first_name">First Name</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="last_name" type="text" class="validate" name="lastname" autocomplete="off"> 
+                <label for="last_name">Last Name</label>
+              </div>
+            </div>
+            
+           
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="password" type="password" class="validate" name="password" autocomplete="off">
+                <label for="password">Password</label>
+              </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                  <input id="username" type="text" class="validate" name="username" autocomplete="off">
+                  <label for="username"> Username </label>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                      <input id="location" type="text" class="validate" name="location" autocomplete="off">
+                      <label for="location"> Location </label>
+                    </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="email" type="email" class="validate" name="email" autocomplete="off">
+                <label for="email">Email</label>
+              </div>
+              <div class="row">
+                      <div class="input-field col s12">
+                        <input id="num" type="number" class="validate" name="phonenumber" autocomplete="off">
+                        <label for="num"> Phone Number (Preferbaly WhatsApp) </label>
+                      </div>
+              <div class="row">
+                      <div class="input-field col s12">
+                        <input id="skills" type="text"" class="validate" name="companyname" autocomplete="off">
+                        <label for="skills">Company Name </label>
+                      </div>
+                      <div class="row">
+                        <div class="input-field col s12">
+                          <input id="skills" type="text"" class="validate" name="designation" autocomplete="off">
+                          <label for="skills">Designation in the Company </label>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s9">
+                            
+                              <textarea id="icon_prefix2" class="materialize-textarea" name="about"></textarea>
+                              <label for="icon_prefix2"> Write about Yourself</label>
+                            </div>
+                          </div>
+                     <div style="text-align:center;">
+                      <button type="submit" class="btn waves-effect waves-light"> Submit</button>   
+                    </div> 
+               
+            </div>
+           
+            </div>
+        </form>
+      </div>
+    </div>
+            
+    
+{% endblock %}
