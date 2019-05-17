@@ -16,7 +16,8 @@ class Employee(models.Model):
     lastName=models.CharField(max_length=100)
     location=models.CharField(max_length=50)
     jobs=models.ManyToManyField(Jobs,related_name='employee_jobs_set')   
-    phone_number=models.CharField(max_length=10) 
+    phone_number=models.CharField(max_length=10)
+    about=models.TextField(blank=True) 
     resume=models.FileField()
 
 class Skill(models.Model):
@@ -31,6 +32,8 @@ class Employer(models.Model):
     location=models.CharField(max_length=50)
     company_name=models.CharField(max_length=100)
     phone_number=models.CharField(max_length=10) 
+    designation=models.CharField(max_length=50,blank=True)
+    about=models.TextField(blank=True)
     jobs=models.ManyToManyField(Jobs,related_name='employer_jobs_set')
 class Profile(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)

@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View
-from .models import Employee, Skill, Profile
+from .models import Employee, Skill, Profile, Employer
 from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate, logout, get_user
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 
 class HomeView(View):
@@ -36,6 +38,7 @@ class EmployeeRegisterView(View):
             employee.phone_number = request.POST.get('phonenumber')
             employee.location = request.POST.get('location')
             employee.user = user
+            employee.about = request.POST.get('about')
             employee.save()
             #
             # Profile Logic
@@ -46,11 +49,85 @@ class EmployeeRegisterView(View):
 
             # Skill logic
             for skill in request.POST.get('skills').split(','):
-                skill,d=Skill.objects.get_or_create(skill=skill,employee=employee)
-             
-                
+                skill, d = Skill.objects.get_or_create(
+                    skill=skill, employee=employee)
+
                 skill.save()
-                
-           
-            return redirect('home')
+
+            return redirect('login')
+        return render(request, self.template_name)
+
+
+class LoginView(View):
+    template_name = "employoapp/login.html"
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        try:
+            user = User.objects.get(email=request.POST.get('email'))
+
+        except:
+            return render(request, self.template_name, {'error': True})
+
+        else:
+            user = authenticate(request,
+                                username=user.username,
+                                password=request.POST.get('password')
+                                )
+            if user is None:
+                return render(request, self.template_name, {'error': True})
+            login(request, user)
+            response = redirect('home')
+            response.set_cookie('role', 'user')
+            return response
+
+        return render(request, self.template_name)
+
+
+class LogoutView(View, LoginRequiredMixin):
+    def get(self, request):
+        logout(request)
+        response = redirect('home')
+        response.delete_cookie('role')
+        return response
+
+
+class EmployerRegisterView(View):
+    template_name = "employoapp/employerregister.html"
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        if User.objects.filter(email=request.POST.get('email')).exists():
+            return render(request, self.template_name, {'error': True})
+        elif User.objects.filter(email=request.POST.get('username')).exists():
+            return render(request, self.template_name, {'uerror': True})
+        else:
+            user = User()
+            user.email = request.POST.get('email')
+            user.set_password(request.POST.get('password'))
+            user.username = request.POST.get('username')
+            user.save()
+            # Employee Logic
+            employer = Employer()
+            employer.firstName = request.POST.get('firstname')
+            employer.lastName = request.POST.get('lastname')
+            employer.phone_number = request.POST.get('phonenumber')
+            employer.location = request.POST.get('location')
+            employer.user = user
+            employer.company_name = request.POST.get('companyname')
+            employer.designation = request.POST.get('designation')
+            employer.about = request.POST.get('about')
+
+            employer.save()
+            #
+            # Profile Logic
+            profile = Profile()
+            profile.user = user
+            profile.employer = True
+            profile.save()
+            return redirect('login')
         return render(request, self.template_name)
