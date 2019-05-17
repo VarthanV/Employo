@@ -1,0 +1,31 @@
+{% extends 'employoapp/base.html' %}
+{% load staticfiles %}
+<style>
+body{
+    background-color: #333;
+    background-image: #333;
+}
+
+</style>
+{% block content %}
+<div style="text-align:center; padding: 50px;">
+        
+               
+ <img src="{% static 'employoapp/home.jpg' %}" width="50%" style="text-align:center;"> <!-- random image -->
+                   
+  
+        <hr class="my4">
+
+
+        <a onclick="M.toast({html: 'Cool Nice Decision'})" class="btn" style="margin:20px;" href="{% url 'add-employee' %}"> I am here to seek a Suitable Job </a> <br>
+        <a onclick="M.toast({html: 'Thanks for choosing our platform'})" class="btn" style="margin:20px;"> I am here to seek a Suitable Candidate </a> 
+        
+ <br>
+
+
+    
+</div>
+
+
+
+{% endblock %}
