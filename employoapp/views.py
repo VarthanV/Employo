@@ -1,15 +1,18 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import View
 from .models import Employee, Skill, Profile, Employer
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout, get_user
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
+from django.http import HttpResponse
+
 
 class HomeView(View):
     template_name = "employoapp/index.html"
 
     def get(self, request):
+
         return render(request, self.template_name)
 
 
@@ -43,8 +46,8 @@ class EmployeeRegisterView(View):
             #
             # Profile Logic
             profile = Profile()
-            profile.user = user
             profile.employee = True
+            profile.user = user
             profile.save()
 
             # Skill logic
@@ -79,6 +82,7 @@ class LoginView(View):
             if user is None:
                 return render(request, self.template_name, {'error': True})
             login(request, user)
+
             response = redirect('home')
             response.set_cookie('role', 'user')
             return response
@@ -131,3 +135,39 @@ class EmployerRegisterView(View):
             profile.save()
             return redirect('login')
         return render(request, self.template_name)
+
+
+class JobPostingView(View):
+    template_name = "employoapp/jobposting.html"
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        pass
+
+
+class ProfileView(View):
+    template_name = "employoapp/profile.html"
+
+    def get(self, request, pk):
+        user = User.objects.get(pk=pk)
+        employee = get_object_or_404(Employee, user=user)
+        if not request.user.pk == user.pk:
+            raise HttpResponse(status=500)
+        if not employee is None:
+
+            return render(request, self.template_name, {'employee': employee, 'isemployee': True})
+        elif not employee:
+            employer = Employer.objects.get(user=user)
+            return render(request, self.template_name, {'employer': employer, 'isemployer': True})
+        else:
+            return redirect('login')
+
+    def post(self, request, pk):
+        user = User.objects.get(pk=pk)
+        employee = get_object_or_404(Employee, user=user)
+        employee.resume = request.FILES.get('docfile')
+        employee.save()
+        return redirect('profile', pk=employee.pk)
+        return render(request, self.template_name, {'employee': employee, 'isemployee': True})

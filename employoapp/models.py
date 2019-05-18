@@ -15,10 +15,10 @@ class Employee(models.Model):
     firstName=models.CharField(max_length=50)
     lastName=models.CharField(max_length=100)
     location=models.CharField(max_length=50)
-    jobs=models.ManyToManyField(Jobs,related_name='employee_jobs_set')   
+    jobs=models.ManyToManyField(Jobs,related_name='employee_jobs_set',blank=True)   
     phone_number=models.CharField(max_length=10)
     about=models.TextField(blank=True) 
-    resume=models.FileField()
+    resume=models.FileField(blank=True)
 
 class Skill(models.Model):
      skill=models.TextField()
@@ -34,10 +34,12 @@ class Employer(models.Model):
     phone_number=models.CharField(max_length=10) 
     designation=models.CharField(max_length=50,blank=True)
     about=models.TextField(blank=True)
-    jobs=models.ManyToManyField(Jobs,related_name='employer_jobs_set')
+    jobs=models.ManyToManyField(Jobs,related_name='employer_jobs_set',blank=True)
 class Profile(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     employee=models.BooleanField(default=False)
     employer=models.BooleanField(default=False)
+    User.profile=property(lambda u: Profile.objects.get_or_create(user=u)[0])
+
     def __str__(self):
         return self.user.username

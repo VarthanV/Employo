@@ -1,0 +1,52 @@
+{% extends 'employoapp/base.html' %}
+<style>
+    .avatar1 {
+        vertical-align: middle;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+</style>
+{% block content %}
+{% if isemployee %}
+<div style="text-align: center">
+    <img src="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png" height="90px;" width="90px;"
+        style="border-radius: 50%; vertical-align: middle;">
+    <h3> {{employee.firstName }} {{employee.lastName}}</h3>
+    <h4> {{employee.user.email}} </h4>
+    <hr style="border: none">
+
+
+
+</div>
+<div style="text-align: left; margin-left: 40px;">
+<h5> Skills ({{employee.skill_set.all.count}})</h5>
+<div class="row">
+{% for skill in employee.skill_set.all %}
+
+<div class="chip">  <span style="font-size: 20px;"> {{skill.skill}} </span></div>
+
+{% endfor %}
+</div>
+<hr style="border: aliceblue">
+<h5> About</h5>
+<p> {{employee.about}}</p>
+<hr style="border: none">
+{% if not  employee.resume  and  employee.user.pk == request.user.pk %}
+<div class="form-control">
+    <form method="POST" action="{% url 'profile' user.pk %}" enctype="multipart/form-data">
+        {% csrf_token %}
+            <input type="file" name="docfile" class="waves-effect waves-light btn""> <br>
+            <button type="submit" class="waves-effect waves-light btn">Submit </button>
+
+
+    </form>
+ {% elif employee.resume and  employee.user.pk == request.user.pk %}
+ <a href="{{employee.resume.url}}" target="blank"> {{employee.resume }} </a>
+ {% endif %}
+       
+</div>
+</div>
+
+{% endif %}
+{% endblock %}

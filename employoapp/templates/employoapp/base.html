@@ -1,41 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <link  href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title> Employo</title>
-    <style>
-        body{
-            font-family: 'Roboto', sans-serif;
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title> Employo</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
 
-        }
-    </style>
+    }
+  </style>
 </head>
+
 <body>
-    <!-- Navbar-->
-   
+  <!-- Navbar-->
+
   <nav class="blue">
-        <div class="nav-wrapper">
-          <a href="{% url 'home' %}" class="brand-logo left">Employo</a>
-          <ul id="nav-mobile" class="right ">
-              {% if not request.user.is_authenticated %}
-           <li> <a href="{% url 'login' %}"> Login </a> </li>
-           {% elif request.user.is_authenticated and request.user.employee %}
-           <li> <a href=""> SEARCH JOBS</a> </li>
-           <li> <a href=""> MY PROFILE</a> </li>
-           <li> <a href="{% url 'logout'%}"> LOGOUT </a> </li>
-          
-           {% endif %}
-          </ul>
-        </div>
-      </nav>
-        {% block content %} {% endblock %}    
+    <div class="nav-wrapper">
+      <a href="{% url 'home' %}" class="brand-logo left">Employo</a>
+      <ul id="nav-mobile" class="right ">
+        {% if not request.user.is_authenticated %}
+        <li> <a href="{% url 'login' %}"> Login </a> </li>
+
+        {% elif user.is_authenticated %}
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>   
+
+
+        <li> <a href="{% url 'profile' request.user.pk %}"> MY PROFILE</a> </li>
+       
+        <li> <a href="{% url 'logout'%}"> LOGOUT </a> </li>
+        
+
+
+
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+  {% block content %} {% endblock %}
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
+
 </html>

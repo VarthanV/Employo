@@ -13,14 +13,24 @@ body{
                
  <img src="{% static 'employoapp/home.jpg' %}" width="50%" style="text-align:center;"> <!-- random image -->
                    
-  
+        {% if not request.user.is_authenticated %}
         <hr class="my4">
 
 
         <a onclick="M.toast({html: 'Cool Nice Decision'})" class="btn" style="margin:20px;" href="{% url 'add-employee' %}"> I am here to seek a Suitable Job </a> <br>
-        <a onclick="M.toast({html: 'Thanks for choosing our platform'})" class="btn" style="margin:20px;" href="{% url 'add-employer' %}"> I am here to seek a Suitable Candidate </a> 
-        
+        <a onclick="M.toast({html: 'Thanks for choosing our platform'})" class="btn" style="margin:20px;" href="{% url 'add-employer' %}"> I am here to seek a Suitable Candidate </a> <br>
+        {% elif user.is_authenticated and  request.user.profile.employee %}
+                    <br>
+
+
+        <a onclick="M.toast({html: 'Cool Nice Decision'})" class="btn" style="margin:20px; " href="#">  SEARCH JOBS </a> <br>
+
+        {% elif user.is_authenticated %}
+                    <br>
+        <a onclick="M.toast({html: 'Cool Nice Decision'})" class="btn" style="margin:20px;" href="#">  POST JOBS </a> <br>
+        {% endif %}
  <br>
+
 
 
     
