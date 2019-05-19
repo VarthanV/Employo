@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'Employo.wsgi.application'
 DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME':'Employoapp',
+        'NAME':'employoapp',
         'USER':'postgres',
         'PASSWORD':'2206',
         'HOST':	'127.0.0.1',

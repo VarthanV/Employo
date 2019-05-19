@@ -28,17 +28,22 @@
         {% if not request.user.is_authenticated %}
         <li> <a href="{% url 'login' %}"> Login </a> </li>
 
-        {% elif user.is_authenticated %}
+        {% elif user.is_authenticated and user.profile.employee  %}
 
 
 
-
+        <li>  <a href="">   SEARCH JOBS </a> </li>
         <li> <a href="{% url 'profile' request.user.pk %}"> MY PROFILE</a> </li>
        
         <li> <a href="{% url 'logout'%}"> LOGOUT </a> </li>
         
 
+        {% elif user.is_authenticated and user.profile.employer %}
 
+        <li>  <a href="{% url 'job-posting' %}">   POST JOBS </a> </li>
+        <li> <a href="{% url 'profile' request.user.pk %}"> MY PROFILE</a> </li>
+       
+        <li> <a href="{% url 'logout'%}"> LOGOUT </a> </li>
 
         {% endif %}
       </ul>

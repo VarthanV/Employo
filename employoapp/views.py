@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import View
-from .models import Employee, Skill, Profile, Employer
+from .models import Employee, Skill, Profile, Employer, Jobs,JobSkill
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET
 from django.contrib.auth import login, authenticate, logout, get_user
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 
 
 class HomeView(View):
@@ -141,10 +143,30 @@ class JobPostingView(View):
     template_name = "employoapp/jobposting.html"
 
     def get(self, request):
+
+        if not request.user.profile.employer:
+            return HttpResponse(status=500)
         return render(request, self.template_name)
 
     def post(self, request):
-        pass
+
+        if not request.user.profile.employer:
+            return HttpResponse(status=500)
+        else:
+            employer=get_object_or_404(Employer,user=User.objects.get(pk=request.user.pk))
+            job = Jobs()
+            job.title = request.POST.get('title')
+            job.about = request.POST.get('about')
+            job.location = request.POST.get('location')
+            job.company=request.POST.get('company')
+            job.employer =employer.user
+            job.save()
+            for skill in request.POST.get('skills').split(','):
+                skill, d = JobSkill.objects.get_or_create(
+                    skill=skill, job=job)
+
+                skill.save()
+            return redirect('home')    
 
 
 class ProfileView(View):
@@ -152,22 +174,36 @@ class ProfileView(View):
 
     def get(self, request, pk):
         user = User.objects.get(pk=pk)
-        employee = get_object_or_404(Employee, user=user)
+        
         if not request.user.pk == user.pk:
-            raise HttpResponse(status=500)
-        if not employee is None:
+            return HttpResponse(status=500)
+        if request.user.profile.employee:
+            employee=get_object_or_404(Employee,user=user)
 
             return render(request, self.template_name, {'employee': employee, 'isemployee': True})
-        elif not employee:
-            employer = Employer.objects.get(user=user)
-            return render(request, self.template_name, {'employer': employer, 'isemployer': True})
+
+        elif request.user.profile.employer:
+            employer=get_object_or_404(Employer,user=user)
+            
+            return render(request, self.template_name, {'employer': employer, 'isemployer': True,})
         else:
-            return redirect('login')
+            return HttpResponse(status=500)
 
     def post(self, request, pk):
         user = User.objects.get(pk=pk)
         employee = get_object_or_404(Employee, user=user)
         employee.resume = request.FILES.get('docfile')
         employee.save()
-        return redirect('profile', pk=employee.pk)
+        return redirect('profile', pk=pk)
         return render(request, self.template_name, {'employee': employee, 'isemployee': True})
+
+
+@csrf_exempt
+@require_GET
+def resumeRemoveView(request, pk):
+    user = User.objects.get(pk=pk)
+    employee = get_object_or_404(Employee, user=user)
+
+    employee.resume.delete()
+    employee.save()
+    return redirect('profile', pk=pk)
