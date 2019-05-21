@@ -8,7 +8,8 @@ urlpatterns=[
     path('addemployer/',views.EmployerRegisterView.as_view(),name='add-employer'),
     path('profile/<int:pk>/',views.ProfileView.as_view(),name='profile'),
     path('remove/<int:pk>',views.resumeRemoveView,name='resume-remove'),
-    path('postjob/',views.JobPostingView.as_view(),name='job-posting')
+    path('postjob/',views.JobPostingView.as_view(),name='job-posting'),
+    path('job/<int:pk>/',views.JobDetailView.as_view(),name='job-detail')
 
 
 ]

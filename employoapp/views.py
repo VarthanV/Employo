@@ -166,7 +166,7 @@ class JobPostingView(View):
                     skill=skill, job=job)
 
                 skill.save()
-            return redirect('home')    
+            return redirect('job-detail',pk=job.pk)    
 
 
 class ProfileView(View):
@@ -207,3 +207,10 @@ def resumeRemoveView(request, pk):
     employee.resume.delete()
     employee.save()
     return redirect('profile', pk=pk)
+
+class JobDetailView(View,LoginRequiredMixin):
+    template_name="employoapp/job_detail.html"
+    def get(self,request,pk):
+        job=Jobs.objects.get(pk=pk)
+        employer=Employer.objects.get(user=job.employer)
+        return render(request,self.template_name,{'job':job,'employer':employer})
