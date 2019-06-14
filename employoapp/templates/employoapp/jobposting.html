@@ -4,7 +4,7 @@
 <h3 style="text-align: center"> Post a New Job Opening</h3>
 <div style="padding: 20px" id="job-posting-section" class="container">
     <form action="{% url 'job-posting' %}" method="POST" autocomplete="off">
-            {% csrf_token %}
+        {% csrf_token %}
         <div class="row">
             <div class="input-field col s12">
                 <input id="title" type="text" class="validate" name="title" autocomplete="off">
@@ -19,28 +19,38 @@
             </div>
         </div>
         <div class="row">
-                <div class="input-field col s12">
-                    <input id="location" type="text" class="validate" name="location" autocomplete="off">
-                    <label for="location">Location of Job </label>
-                </div>
+            <div class="input-field col s12">
+                <input id="location" type="text" class="validate" name="location" autocomplete="off">
+                <label for="location">Location of Job </label>
             </div>
-            <div class="row">
-                    <div class="input-field col s12">
-                        <input id="skills" type="text" class="validate" name="skills" autocomplete="off">
-                        <label for="skills"> Skills needed for the job(Seperated by Commas)  </label>
-                    </div>
-                </div>
-                <div class="row">
-                        <div class="input-field col s12">
-                            <input id="company" type="text" class="validate" name="company" autocomplete="off">
-                            <label for="company"> Company Name  </label>
-                        </div>
-                    </div>
-                    <div class="row" style="text-align:center;">
-                        <button type ="submit" class="btn waves-effect waves-dark"> POST  </button>
-                    </div>
-        
-    
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="skills" type="text" class="validate" name="skills" autocomplete="off">
+                <label for="skills"> Skills needed for the job(Seperated by Commas) </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="company" type="text" class="validate" name="company" autocomplete="off">
+                <label for="company"> Company Name </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+
+                <input type="file" name="files">
+
+
+
+
+            </div>
+        </div>
+        <div class="row" style="text-align:center;">
+            <button type="submit" class="btn waves-effect waves-dark"> POST </button>
+        </div>
+
+
 
 
 

@@ -3,26 +3,34 @@
 {% block content %}
 
 <div class="container" style="padding-top:30px;">
-    <h4 style="text-align:center">  Login </h4>
-<div style="padding-top:30px;">
-      <form action="{% url 'login' %}" method="POST">
-          {% csrf_token %}
-         
-              <div class="input-field col s6">
-                <input id="email" type="email" class="validate" name="email" autocomplete="off">
-                <label for = "email">Email</label>
-              </div>
-              <div class="input-field col s6">
-                <input id="password" type="password" class="validate" name="password" autocomplete="off"> 
-                <label for="password">Password</label>
-              </div>
-              <div style="text-align: center">
-                <button class="btn waves-effect waves-light"> Submit</button>
-            </div>
-              
-              </form>
-            
-            
+  <h4 style="text-align:center"> Login </h4>
+  <div>
+    {% if error %}
+
+    <h5 style="color: red" style="text-align: center"> * Email or Password Incorrect </h5>
+    {% endif %}
+
+  </div>
+
+  <div style="padding-top:30px;">
+    <form action="{% url 'login' %}" method="POST">
+      {% csrf_token %}
+
+      <div class="input-field col s6">
+        <input id="email" type="email" class="validate" name="email" autocomplete="off" required>
+        <label for="email">Email</label>
+      </div>
+      <div class="input-field col s6">
+        <input id="password" type="password" class="validate" name="password" autocomplete="off" required>
+        <label for="password">Password</label>
+      </div>
+      <div style="text-align: center">
+        <button class="btn waves-effect waves-light"> Submit</button>
+      </div>
+
+    </form>
 
 
-{% endblock %}
+
+
+    {% endblock %}

@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'employoapp.apps.EmployoappConfig',
     'django.contrib.staticfiles',
+    'api.apps.ApiConfig',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [

@@ -1,40 +1,71 @@
 {% extends 'employoapp/base.html' %}
 {% load staticfiles %}
 <style>
-body{
-    background-color: #333;
-    background-image: #333;
-}
-
+    body {
+        background-color: #333;
+        background-image: #333;
+    }
 </style>
 {% block content %}
 <div style="text-align:center; padding: 50px;">
-        
-               
- <img src="{% static 'employoapp/home.jpg' %}" width="50%" style="text-align:center;"> <!-- random image -->
-                   
-        {% if not request.user.is_authenticated %}
-        <hr class="my4">
 
 
-        <a onclick="M.toast({html: 'Cool Nice Decision'})" class="btn" style="margin:20px;" href="{% url 'add-employee' %}"> I am here to seek a Suitable Job </a> <br>
-        <a onclick="M.toast({html: 'Thanks for choosing our platform'})" class="btn" style="margin:20px;" href="{% url 'add-employer' %}"> I am here to seek a Suitable Candidate </a> <br>
-        {% elif user.is_authenticated and  request.user.profile.employee %}
-                    <br>
+    <img src="{% static 'employoapp/home.jpg' %}" width="50%" style="text-align:center;"> <!-- random image -->
+
+    {% if not request.user.is_authenticated %}
+    <hr class="my4">
 
 
-        <a onclick="M.toast({html: 'Cool Nice Decision'})" class="btn" style="margin:20px; " href="#">  SEARCH JOBS </a> <br>
-
-        {% elif user.is_authenticated %}
-                    <br>
-        <a onclick="M.toast({html: 'Cool Nice Decision'})" class="btn" style="margin:20px;" href="#">  POST JOBS </a> <br>
-        {% endif %}
- <br>
-
+    <a onclick="M.toast({html: 'Cool Nice Decision'})" class="btn" style="margin:20px;" href="{% url 'add-employee' %}">
+        I am here to seek a Suitable Job </a> <br>
+    <a onclick="M.toast({html: 'Thanks for choosing our platform'})" class="btn" style="margin:20px;"
+        href="{% url 'add-employer' %}"> I am here to seek a Suitable Candidate </a> <br>
+    {% elif user.is_authenticated and  request.user.profile.employee %}
+    <br>
 
 
-    
+    <a onclick="M.toast({html: 'Cool Nice Decision'})" class="btn" style="margin:20px; " href="#"> SEARCH JOBS </a> <br>
+
+    {% elif user.is_authenticated %}
+    <br>
+    <a onclick="M.toast({html: 'Cool Nice Decision'})" class="btn" style="margin:20px;" href="{% url 'job-posting' %}">
+        POST JOBS </a> <br>
+    {% endif %}
+    <br>
+
+
+
+
+
 </div>
+{% for job in jobs %}
+
+<div class="row" style="text-align: center; margin-left: 35%;">
+    <div class="col s12 m6">
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title">{{job.title}}</span>
+                <p>{{ job.about |truncatechars:50}}</p>
+            </div>
+            <hr style="visibility: hidden">
+            {% for skill in job.jobskill_set.all %}
+
+            <span>
+                <div class="chip"> {{skill.skill}}</div>
+            </span>
+
+            {% endfor %}
+            <div class="card-action">
+                <a href="{% url 'job-detail' job.pk %}">Read More</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+{% endfor %}
 
 
 

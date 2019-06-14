@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import View
-from .models import Employee, Skill, Profile, Employer, Jobs,JobSkill
+from .models import Employee, Skill, Profile, Employer, Jobs, JobSkill
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
@@ -14,8 +14,9 @@ class HomeView(View):
     template_name = "employoapp/index.html"
 
     def get(self, request):
+        jobs = Jobs.objects.all()
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, {'jobs': jobs})
 
 
 class EmployeeRegisterView(View):
@@ -153,20 +154,23 @@ class JobPostingView(View):
         if not request.user.profile.employer:
             return HttpResponse(status=500)
         else:
-            employer=get_object_or_404(Employer,user=User.objects.get(pk=request.user.pk))
+            employer = get_object_or_404(
+                Employer, user=User.objects.get(pk=request.user.pk))
             job = Jobs()
             job.title = request.POST.get('title')
             job.about = request.POST.get('about')
             job.location = request.POST.get('location')
-            job.company=request.POST.get('company')
-            job.employer =employer.user
+            job.company = request.POST.get('company')
+            job.employer = employer.user
+            job.files = request.FILES.get('files')
             job.save()
             for skill in request.POST.get('skills').split(','):
                 skill, d = JobSkill.objects.get_or_create(
                     skill=skill, job=job)
 
                 skill.save()
-            return redirect('job-detail',pk=job.pk)    
+
+            return redirect('job-detail', pk=job.pk)
 
 
 class ProfileView(View):
@@ -174,18 +178,18 @@ class ProfileView(View):
 
     def get(self, request, pk):
         user = User.objects.get(pk=pk)
-        
+
         if not request.user.pk == user.pk:
             return HttpResponse(status=500)
         if request.user.profile.employee:
-            employee=get_object_or_404(Employee,user=user)
+            employee = get_object_or_404(Employee, user=user)
 
             return render(request, self.template_name, {'employee': employee, 'isemployee': True})
 
         elif request.user.profile.employer:
-            employer=get_object_or_404(Employer,user=user)
-            
-            return render(request, self.template_name, {'employer': employer, 'isemployer': True,})
+            employer = get_object_or_404(Employer, user=user)
+
+            return render(request, self.template_name, {'employer': employer, 'isemployer': True, })
         else:
             return HttpResponse(status=500)
 
@@ -208,9 +212,24 @@ def resumeRemoveView(request, pk):
     employee.save()
     return redirect('profile', pk=pk)
 
-class JobDetailView(View,LoginRequiredMixin):
-    template_name="employoapp/job_detail.html"
-    def get(self,request,pk):
-        job=Jobs.objects.get(pk=pk)
-        employer=Employer.objects.get(user=job.employer)
-        return render(request,self.template_name,{'job':job,'employer':employer})
+
+class JobDetailView(View, LoginRequiredMixin):
+    template_name = "employoapp/job_detail.html"
+
+    def get(self, request, pk):
+        job = Jobs.objects.get(pk=pk)
+        employer = Employer.objects.get(user=job.employer)
+        return render(request, self.template_name, {'job': job, 'employer': employer})
+
+
+class EmployeeEditView(View, LoginRequiredMixin, UserPassesTestMixin):
+
+    template_name = "employoapp/employeeedit.html"
+
+    def test_func(self):
+        employee = Employee.objects.get(pk=self.kwargs['pk'])
+        return self.request.user.pk == employee.pk
+
+    def get(self, request, pk):
+        employee = Employee.objects.get(user=request.user)
+        return render(request, self.template_name, {'employee': employee})

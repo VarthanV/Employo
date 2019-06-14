@@ -9,13 +9,11 @@ class Jobs(models.Model):
     employer = models.ForeignKey(User,on_delete=models.CASCADE,blank=True,null=True)
     employee = models.ManyToManyField(User, related_name="employee_set")
     company=models.CharField(max_length=50,blank=True)
+    files=models.FileField(blank=True,null=True)
     def __str__(self):
         return self.title
 
 
-class JobFiles(models.Model):
-    job = models.ForeignKey(Jobs, on_delete=models.CASCADE)
-    job_file = models.FileField()
 
 
 class Employee(models.Model):

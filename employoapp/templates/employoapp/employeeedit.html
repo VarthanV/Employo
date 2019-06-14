@@ -1,17 +1,6 @@
 {% extends 'employoapp/base.html'%}
 {% block content %}
-{% if error %}
-<script>
-    alert("User with this email already exists Please Login with ypur credentials");
-</script>
 
-{% endif %}
-{% if uerror %}
-<script>
-    alert("Username already exists");
-</script>
-
-{% endif %}
 <div class="container" style="padding-top:30px;">
     <h4 style="text-align:center"> Tell Us more about Yourself </h4>
 <div class="row" style="padding-top:30px;">
@@ -19,11 +8,11 @@
           {% csrf_token %}
           <div class="row">
               <div class="input-field col s6">
-                <input id="first_name" type="text" class="validate" name="firstname" autocomplete="off" >
+                <input id="first_name" type="text" class="validate" name="firstname" autocomplete="off" value="{{employee.firstName}}" >
                 <label for="first_name">First Name</label>
               </div>
               <div class="input-field col s6">
-                <input id="last_name" type="text" class="validate" name="lastname" autocomplete="off"> 
+                <input id="last_name" type="text" class="validate" name="lastname" autocomplete="off"  value ="{{employee.lastName}}"> 
                 <label for="last_name">Last Name</label>
               </div>
             </div>
@@ -32,39 +21,39 @@
             </div>
             <div class="row">
               <div class="input-field col s12">
-                <input id="password" type="password" class="validate" name="password" autocomplete="off">
+                <input id="password" type="password" class="validate" name="password" autocomplete="off" >
                 <label for="password">Password</label>
               </div>
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                  <input id="username" type="text" class="validate" name="username" autocomplete="off">
+                  <input id="username" type="text" class="validate" name="username" autocomplete="off" value="{{employee.user.username}}">
                   <label for="username"> Username </label>
                 </div>
                 <div class="row">
                     <div class="input-field col s12">
-                      <input id="location" type="text" class="validate" name="location" autocomplete="off">
+                      <input id="location" type="text" class="validate" name="location" autocomplete="off" value="{{employee.location}}">
                       <label for="location"> Location </label>
                     </div>
             <div class="row">
               <div class="input-field col s12">
-                <input id="email" type="email" class="validate" name="email" autocomplete="off">
+                <input id="email" type="email" class="validate" name="email" autocomplete="off" value="{{employee.user.email}}">
                 <label for="email">Email</label>
               </div>
               <div class="row">
                       <div class="input-field col s12">
-                        <input id="num" type="number" class="validate" name="phonenumber" autocomplete="off">
+                        <input id="num" type="number" class="validate" name="phonenumber" autocomplete="off" value ="{{employee.phone_number}}">
                         <label for="num"> Phone Number (Preferbaly WhatsApp) </label>
                       </div>
               <div class="row">
                       <div class="input-field col s12">
-                        <input id="skills" type="text"" class="validate" name="skills" autocomplete="off">
+                        <input id="skills" type="text"" class="validate" name="skills" autocomplete="off" value ="{{employee.skills}}">
                         <label for="skills">Skills (Seperated by Commas) </label>
                       </div>
                       <div class="row">
                         <div class="input-field col s9">
                           
-                          <textarea id="icon_prefix2" class="materialize-textarea" name="about" ></textarea>
+                          <textarea id="icon_prefix2" class="materialize-textarea" name="about" value ="{{employee.about}}"></textarea>
                           <label for="icon_prefix2"> Write about Yourselves</label>
                         </div>
                       </div>
